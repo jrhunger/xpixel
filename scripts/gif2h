@@ -1,0 +1,28 @@
+#!/bin/bash
+
+BASEDIR=`basename $0`
+
+if [ $# -ne 1 ]; then
+  echo "specify subdirectory as argument"
+  exit
+fi
+
+if [ ! -d $1 ]; then
+  echo "$1 is not a directory"
+  exit
+fi
+
+GIFDIR=$1
+HDIR="${GIFDIR}.h"
+
+if [ ! -d $HDIR ]; then
+  mkdir $HDIR
+fi
+
+cd $GIFDIR
+ls *.gif | while read line
+do
+  name=`echo $line | sed "s/\.gif$//"`
+  varname=`echo $name | sed "s/-//g"`
+  $BASEDIR/gif2h.py $line $varname > ../$HDIR/${name}.h
+done
